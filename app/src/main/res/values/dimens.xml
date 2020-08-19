@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="recycler_padding">32px</dimen>
+    <dimen name="item_padding">32px</dimen>
+    <dimen name="item_size">160px</dimen>
+</resources>

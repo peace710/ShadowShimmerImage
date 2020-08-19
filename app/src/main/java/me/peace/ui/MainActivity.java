@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         adapter = new ImageAdapter();
         recycler = findViewById(R.id.recycler);
-        recycler.setLayoutManager(new LinearLayoutManager(this));
+        recycler.setLayoutManager(new CenterLinearLayoutManager(this,LinearLayoutManager.VERTICAL));
         recycler.setAdapter(adapter);
         config =
             new ImageConfig.Builder().offset(R.dimen.shadow_offset).shadow(R.drawable.shadow).build();
@@ -61,8 +61,12 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull ImageHolder holder, int position) {
             holder.image.config(config);
             holder.image.shimmer();
-//            holder.image.getHierarchy().setPlaceholderImage(R.drawable.draw);
-            holder.image.setImage(imageUrl(),R.mipmap.ic_launcher_round,R.mipmap.ic_launcher);
+            String url = imageUrl();
+            if (url == null) {
+                holder.image.getHierarchy().setPlaceholderImage(R.drawable.draw);
+            }else {
+                holder.image.setImage(url, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher);
+            }
             holder.image.setOnFocusChangeListener((v, hasFocus) -> {
                 scale(v,hasFocus);
                 if (hasFocus){
@@ -89,20 +93,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void scale(View v,boolean hasFocus){
-            AnimationUtils.scaleCenter(v,hasFocus? 1.0f : 1.5f,hasFocus?1.5f : 1.0f,500);
+            AnimationUtils.scaleCenter(v,hasFocus? 1.0f : 1.2f,hasFocus?1.2f : 1.0f,500);
         }
 
         private String imageUrl(){
-            int index = new Random().nextInt(6);
+            int index = new Random().nextInt(7);
+            if (index == 6) return null;
             return images[index];
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_0){
-            adapter.notifyDataSetChanged();
-        }
-        return super.onKeyDown(keyCode, event);
     }
 }
