@@ -4,20 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import me.peace.ui.layoutmanager.CenterLinearLayoutManager;
 import me.peace.ui.utils.AnimationUtils;
+import me.peace.widget.SSUtils;
 import me.peace.widget.config.ImageConfig;
-import me.peace.widget.image.Sh2ImageView;
-import me.peace.widget.image.ShadowImageView;
-import me.peace.widget.image.ShimmerImageView;
+import me.peace.widget.image.SSImageView;
 import me.peace.widget.image.UriImageView;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import java.util.Random;
 
@@ -33,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
         "https://wx4.sinaimg.cn/mw690/acff3e61ly1ghvvq3lfrmj21o02804qr.jpg",
         "https://wx2.sinaimg.cn/mw690/daade500ly1ghv6p13yegj20zk0qo7wh.jpg",
     };
+    private String gif = "http://p0.ssl.qhimgs1.com/sdr/400__/t010e7771b60b3ad896.gif";
     private ImageAdapter adapter;
+    private UriImageView gifView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
         recycler.setAdapter(adapter);
         config =
             new ImageConfig.Builder().offset(R.dimen.shadow_offset).shadow(R.drawable.shadow).build();
+
+//        gifView = findViewById(R.id.gifView);
+//        gifView.setImageGif(gif);
     }
 
 
@@ -60,19 +63,21 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ImageHolder holder, int position) {
             holder.image.config(config);
-            holder.image.shimmer();
             String url = imageUrl();
-            if (url == null) {
+            boolean isGif = isGif(url);
+            if ("".equalsIgnoreCase(url)) {
                 holder.image.getHierarchy().setPlaceholderImage(R.drawable.draw);
             }else {
-                holder.image.setImage(url, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher);
+                if (isGif){
+                    holder.image.setImageGif(url);
+                }else {
+                    holder.image.setImage(url, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher);
+                }
             }
             holder.image.setOnFocusChangeListener((v, hasFocus) -> {
                 scale(v,hasFocus);
-                if (hasFocus){
-                    holder.image.startShimmer();
-                }else{
-                    holder.image.stopShimmer();
+                if (!isGif){
+                    SSUtils.focus((SSImageView) v,hasFocus);
                 }
             });
         }
@@ -85,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         class ImageHolder extends RecyclerView.ViewHolder{
 //            private ShimmerImageView image;
 //            private ShadowImageView image;
-            private Sh2ImageView image;
+            private SSImageView image;
             public ImageHolder(@NonNull View itemView) {
                 super(itemView);
                 image = itemView.findViewById(R.id.image);
@@ -97,9 +102,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private String imageUrl(){
-            int index = new Random().nextInt(7);
-            if (index == 6) return null;
+            int index = new Random().nextInt(9);
+//            if (index > 5 && index < 8) return gif;
+//            if (index == 8) return "";
+//            if (index > 5) return "";
+            if (index > 5){
+                return images[index - 5];
+            }
             return images[index];
+        }
+
+        private boolean isGif(String url){
+            return url.endsWith(".gif");
         }
     }
 }

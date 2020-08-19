@@ -9,45 +9,51 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 
 import me.peace.widget.config.ImageConfig;
 
-public class Sh2ImageView extends ShimmerImageView {
+public class SSImageView extends ShimmerImageView {
     private ImageConfig mConfig;
+    private Drawable mDrawable;
 
-    public Sh2ImageView(Context context, GenericDraweeHierarchy hierarchy) {
+    public SSImageView(Context context, GenericDraweeHierarchy hierarchy) {
         super(context, hierarchy);
     }
 
-    public Sh2ImageView(Context context) {
+    public SSImageView(Context context) {
         super(context);
     }
 
-    public Sh2ImageView(Context context, AttributeSet attrs) {
+    public SSImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public Sh2ImageView(Context context, AttributeSet attrs, int defStyle) {
+    public SSImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public Sh2ImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public SSImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
 
-    @Override
-    protected void onDraw(Canvas canvas) {
+    public void shadowBounds(boolean showShadow){
         if (mConfig != null){
-            Drawable drawable = mConfig.getShadow(getContext());
-            if (drawable != null) {
+            mDrawable = mConfig.getShadow(getContext());
+            if (mDrawable != null) {
                 int offset = mConfig.getOffset(getContext());
                 int w = getWidth();
                 int h = getHeight();
-                if (isFocused()) {
-                    drawable.setBounds(-offset,-offset,w + offset,h + offset);
-                    drawable.draw(canvas);
+                if (showShadow) {
+                    mDrawable.setBounds(-offset,-offset,w + offset,h + offset);
                 }else{
-                    drawable.setBounds(0,0,w,h);
+                    mDrawable.setBounds(0,0,w,h);
                 }
             }
+        }
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (mDrawable != null){
+            mDrawable.draw(canvas);
         }
         super.onDraw(canvas);
     }

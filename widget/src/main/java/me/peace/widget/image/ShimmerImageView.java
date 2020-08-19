@@ -83,4 +83,10 @@ public class ShimmerImageView extends UriImageView {
     protected boolean verifyDrawable(@NonNull Drawable who) {
         return super.verifyDrawable(who) || who == mShimmerDrawable;
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        stopShimmer();
+    }
 }

@@ -5,9 +5,13 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 public class UriImageView extends SimpleDraweeView {
     public UriImageView(Context context, GenericDraweeHierarchy hierarchy) {
@@ -75,5 +79,11 @@ public class UriImageView extends SimpleDraweeView {
         roundingParams.setBorder(borderColor, borderSize);
         roundingParams.setRoundAsCircle(isCircle);
         getHierarchy().setRoundingParams(roundingParams);
+    }
+
+    public void setImageGif(String imageUrl){
+        DraweeController controller =
+            Fresco.newDraweeControllerBuilder().setUri(imageUrl).setAutoPlayAnimations(true).build();
+        setController(controller);
     }
 }

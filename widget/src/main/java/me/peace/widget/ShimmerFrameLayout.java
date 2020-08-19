@@ -74,4 +74,10 @@ public class ShimmerFrameLayout extends FrameLayout {
     protected boolean verifyDrawable(@NonNull Drawable who) {
         return super.verifyDrawable(who) || who == mShimmerDrawable;
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        stopShimmer();
+    }
 }

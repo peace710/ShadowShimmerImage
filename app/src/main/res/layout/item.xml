@@ -7,9 +7,9 @@
     android:clipToPadding="false"
     android:clipChildren="false">
 
-    <me.peace.widget.image.Sh2ImageView
-        android:focusableInTouchMode="true"
+    <me.peace.widget.image.SSImageView
         android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_width="@dimen/item_size"
         android:layout_height="@dimen/item_size"
         android:id="@+id/image"

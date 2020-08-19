@@ -1,4 +1,4 @@
-package me.peace.ui;
+package me.peace.ui.layoutmanager;
 
 import android.content.Context;
 import android.graphics.Rect;
