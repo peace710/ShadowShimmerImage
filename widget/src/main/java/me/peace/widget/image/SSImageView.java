@@ -2,8 +2,12 @@ package me.peace.widget.image;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.NinePatchDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 
@@ -15,6 +19,7 @@ public class SSImageView extends ShimmerImageView {
     private boolean mShadowFocused;
     private boolean mEnableShadow;
     private boolean mEnableShimmer;
+    private Rect mNinePatchRect;
 
 
     public SSImageView(Context context, GenericDraweeHierarchy hierarchy) {
@@ -53,11 +58,20 @@ public class SSImageView extends ShimmerImageView {
             mOffset = config.getOffset(context);
             mEnableShadow = config.isEnableShadow();
             mEnableShimmer = config.isEnableShimmer();
+            if (mEnableShadow && mDrawable != null){
+                setLayerType(LAYER_TYPE_NONE,null);
+                if (mDrawable instanceof NinePatchDrawable){
+                    getNinePatchPadding(mDrawable);
+                }
+            }
         }else{
             mDrawable = null;
             mOffset = 0;
             mEnableShadow = false;
             mEnableShimmer = false;
+            if (mNinePatchRect != null){
+                mNinePatchRect.setEmpty();
+            }
         }
     }
 
@@ -66,11 +80,25 @@ public class SSImageView extends ShimmerImageView {
         if (mEnableShadow && mDrawable != null){
             int w = getWidth();
             int h = getHeight();
-            mDrawable.setBounds(-mOffset, -mOffset, w + mOffset, h + mOffset);
+            if (mDrawable instanceof NinePatchDrawable){
+                mDrawable.setBounds(-mNinePatchRect.left,-mNinePatchRect.top,
+                    w + mNinePatchRect.right,h + mNinePatchRect.bottom);
+            }else {
+                mDrawable.setBounds(-mOffset, -mOffset, w + mOffset, h + mOffset);
+            }
         }
         if (mEnableShimmer){
             shimmer();
             startShimmer();
+        }
+    }
+
+    private void getNinePatchPadding(Drawable drawable){
+        if (mNinePatchRect == null){
+            mNinePatchRect = new Rect();
+        }
+        if (drawable != null){
+            drawable.getPadding(mNinePatchRect);
         }
     }
 

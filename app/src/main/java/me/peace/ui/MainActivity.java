@@ -41,10 +41,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         adapter = new ImageAdapter();
         recycler = findViewById(R.id.recycler);
+        recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new CenterLinearLayoutManager(this,LinearLayoutManager.VERTICAL));
         recycler.setAdapter(adapter);
         config =
-            new ImageConfig.Builder().offset(R.dimen.shadow_offset).shadow(R.drawable.shadow).enableShadow(true).enableShimmer(true).build();
+            new ImageConfig.Builder().offset(R.dimen.shadow_offset).shadow(R.drawable.share_bg_focus_home_v2_low_device).enableShadow(true).enableShimmer(true).build();
 
 //        gifView = findViewById(R.id.gifView);
 //        gifView.setImageGif(gif);
