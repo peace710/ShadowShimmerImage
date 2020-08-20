@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         recycler.setLayoutManager(new CenterLinearLayoutManager(this,LinearLayoutManager.VERTICAL));
         recycler.setAdapter(adapter);
         config =
-            new ImageConfig.Builder().offset(R.dimen.shadow_offset).shadow(R.drawable.shadow).build();
+            new ImageConfig.Builder().offset(R.dimen.shadow_offset).shadow(R.drawable.shadow).enableShadow(true).enableShimmer(true).build();
 
 //        gifView = findViewById(R.id.gifView);
 //        gifView.setImageGif(gif);
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 //            if (index == 8) return "";
 //            if (index > 5) return "";
             if (index > 5){
-                return images[index - 5];
+                return "";
             }
             return images[index];
         }

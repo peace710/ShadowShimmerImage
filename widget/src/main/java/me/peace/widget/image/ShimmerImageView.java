@@ -73,10 +73,21 @@ public class ShimmerImageView extends UriImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        int layerId = canvas.saveLayer(0,0,getWidth(),getHeight(), mContentPaint, ALL_SAVE_FLAG);
+        int layerId = canvas.saveLayer(0, 0, getWidth(), getHeight(), mContentPaint, ALL_SAVE_FLAG);
         super.onDraw(canvas);
         mShimmerDrawable.draw(canvas);
         canvas.restoreToCount(layerId);
+    }
+
+    protected void onDraw(Canvas canvas,boolean enable){
+        if (enable){
+            int layerId = canvas.saveLayer(0, 0, getWidth(), getHeight(), mContentPaint, ALL_SAVE_FLAG);
+            super.onDraw(canvas);
+            mShimmerDrawable.draw(canvas);
+            canvas.restoreToCount(layerId);
+        }else{
+            super.onDraw(canvas);
+        }
     }
 
     @Override

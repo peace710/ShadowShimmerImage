@@ -10,8 +10,12 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import me.peace.widget.config.ImageConfig;
 
 public class SSImageView extends ShimmerImageView {
-    private ImageConfig mConfig;
     private Drawable mDrawable;
+    private int mOffset;
+    private boolean mShadowFocused;
+    private boolean mEnableShadow;
+    private boolean mEnableShimmer;
+
 
     public SSImageView(Context context, GenericDraweeHierarchy hierarchy) {
         super(context, hierarchy);
@@ -33,32 +37,47 @@ public class SSImageView extends ShimmerImageView {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-
-    public void shadowBounds(boolean showShadow){
-        if (mConfig != null){
-            mDrawable = mConfig.getShadow(getContext());
-            if (mDrawable != null) {
-                int offset = mConfig.getOffset(getContext());
-                int w = getWidth();
-                int h = getHeight();
-                if (showShadow) {
-                    mDrawable.setBounds(-offset,-offset,w + offset,h + offset);
-                }else{
-                    mDrawable.setBounds(0,0,w,h);
-                }
-            }
-        }
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
-        if (mDrawable != null){
+        if (mEnableShadow && mShadowFocused && mDrawable != null) {
             mDrawable.draw(canvas);
         }
-        super.onDraw(canvas);
+        super.onDraw(canvas,mEnableShimmer);
+
     }
 
     public void config(ImageConfig config) {
-        this.mConfig = config;
+        if (config != null) {
+            Context context = getContext();
+            mDrawable = config.getShadow(context);
+            mOffset = config.getOffset(context);
+            mEnableShadow = config.isEnableShadow();
+            mEnableShimmer = config.isEnableShimmer();
+        }else{
+            mDrawable = null;
+            mOffset = 0;
+            mEnableShadow = false;
+            mEnableShimmer = false;
+        }
+    }
+
+    public void start(){
+        mShadowFocused = true;
+        if (mEnableShadow && mDrawable != null){
+            int w = getWidth();
+            int h = getHeight();
+            mDrawable.setBounds(-mOffset, -mOffset, w + mOffset, h + mOffset);
+        }
+        if (mEnableShimmer){
+            shimmer();
+            startShimmer();
+        }
+    }
+
+    public void stop(){
+        mShadowFocused = false;
+        if (mEnableShimmer){
+            stopShimmer();
+        }
     }
 }
